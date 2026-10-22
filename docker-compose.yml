@@ -19,5 +19,20 @@ services:
     ports:
       - "6379:6379"
 
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://raguser:ragpass@db:5432/ragdb
+      REDIS_URL: redis://redis:6379/0
+      WATCHFILES_FORCE_POLLING: "true"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   pgdata:
