@@ -16,5 +16,6 @@ class Settings(BaseSettings):
     max_question_length: int = 2000
     retrieval_top_k: int = 5
 
+    cors_origins: list[str] = ["http://localhost:5173"] 
 
 settings = Settings()

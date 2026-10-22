@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
@@ -17,7 +19,7 @@ def live():
     "/ready",
     responses={503: {"description": "Database is not reachable"}},
 )
-def ready(db: Session = Depends(get_db)):
+def ready(db: Annotated[Session, Depends(get_db)]):
     try:
         db.execute(text("SELECT 1"))
     except Exception:
