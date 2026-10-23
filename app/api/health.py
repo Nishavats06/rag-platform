@@ -1,3 +1,4 @@
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -5,19 +6,23 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app.api.responses import SERVICE_UNAVAILABLE_RESPONSE
 from app.core.database import get_db
+from app.core.errors import error_body
+from app.schemas.health import LiveData, LiveResponse, ReadyData, ReadyResponse
 
 router = APIRouter(prefix="/health", tags=["health"])
 
 
-@router.get("/live")
+@router.get("/live", response_model=LiveResponse)
 def live():
-    return {"success": True, "message": "alive", "data": {"status": "ok"}}
+    return LiveResponse(message="alive", data=LiveData(status="ok"))
 
 
 @router.get(
     "/ready",
-    responses={503: {"description": "Database is not reachable"}},
+    response_model=ReadyResponse,
+    responses={**SERVICE_UNAVAILABLE_RESPONSE},
 )
 def ready(db: Annotated[Session, Depends(get_db)]):
     try:
@@ -25,10 +30,6 @@ def ready(db: Annotated[Session, Depends(get_db)]):
     except Exception:
         return JSONResponse(
             status_code=503,
-            content={
-                "success": False,
-                "status_code": 503,
-                "message": "Database is not reachable",
-            },
+            content=error_body(503, "Database is not reachable"),
         )
-    return {"success": True, "message": "ready", "data": {"database": "ok"}}
+    return ReadyResponse(message="ready", data=ReadyData(database="ok"))

@@ -9,6 +9,10 @@ EXPECTED_WITH_EXAMPLES = [
     "UserOut",
     "UserResponse",
     "ErrorResponse",
+    "LiveData",
+    "LiveResponse",
+    "ReadyData",
+    "ReadyResponse",
 ]
 
 
