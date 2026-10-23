@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import health
+from app.api import auth, health, users
 from app.core.config import settings
+from app.core.errors import register_exception_handlers
 
 app = FastAPI(title=settings.app_name)
 
@@ -14,14 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+register_exception_handlers(app)
+
 app.include_router(health.router)
-
-
-# from fastapi import FastAPI
-
-# app = FastAPI(title="Document Search & RAG Platform")
-
-
-# @app.get("/health/live")
-# def live():
-#     return {"success": True, "message": "alive", "data": {"status": "ok"}}
+app.include_router(auth.router)
+app.include_router(users.router)
