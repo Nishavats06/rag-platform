@@ -17,5 +17,6 @@ class Settings(BaseSettings):
     retrieval_top_k: int = 5
 
     cors_origins: list[str] = ["http://localhost:5173"] 
-
+    google_client_id: str
+    
 settings = Settings()
