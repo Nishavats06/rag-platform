@@ -18,5 +18,8 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["http://localhost:5173"] 
     google_client_id: str
-    
+    jwt_secret_key: str
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 60
+
 settings = Settings()
