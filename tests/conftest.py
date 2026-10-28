@@ -24,6 +24,7 @@ def engine():
     eng = create_engine(make_url(settings.database_url).set(database=TEST_DB))
     with eng.begin() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+    Base.metadata.drop_all(eng)
     Base.metadata.create_all(eng)
     yield eng
     eng.dispose()
